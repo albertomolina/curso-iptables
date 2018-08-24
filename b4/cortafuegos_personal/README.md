@@ -121,7 +121,6 @@ cualquier sitio web (hoy en día la mayoría son https).
 Editamos un fichero y añadimos todas las reglas anteriores:
 
 ```
-```
 iptables -F
 iptables -t nat -F
 iptables -Z
