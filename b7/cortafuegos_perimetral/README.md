@@ -48,15 +48,15 @@ iptables -A FORWARD -i wlan0 -o virbr2 -p tcp --syn --dport 80 \
 iptables -A FORWARD -i wlan0 -o virbr2 -p tcp --syn --dport 443 \
 -m connlimit --connlimit-above 15 -j REJECT --reject-with tcp-reset
 iptables -A FORWARD -o virbr2 -d 192.168.200.2/32 -p tcp --dport 80 \
--m state --state ESTABLISHED -j ACCEPT
+-m state --state NEW,ESTABLISHED -j ACCEPT
 iptables -A FORWARD -i virbr2 -s 192.168.200.2/32 -p tcp --sport 80 \
 -m state --state ESTABLISHED -j ACCEPT
 iptables -A FORWARD -o virbr2 -d 192.168.200.2/32 -p tcp --dport 443 \
--m state --state ESTABLISHED -j ACCEPT
+-m state --state NEW,ESTABLISHED -j ACCEPT
 iptables -A FORWARD -i virbr2 -s 192.168.200.2/32 -p tcp --sport 443 \
 -m state --state ESTABLISHED -j ACCEPT
 iptables -A FORWARD -o virbr2 -d 192.168.200.2/32 -p tcp --dport 25 \
--m state --state ESTABLISHED -j ACCEPT
+-m state --state NEW,ESTABLISHED -j ACCEPT
 iptables -A FORWARD -i virbr2 -s 192.168.200.2/32 -p tcp --sport 25 \
 -m state --state ESTABLISHED -j ACCEPT
 iptables -A FORWARD -i virbr2 -o virbr1 -s 192.168.200.2/32 \
