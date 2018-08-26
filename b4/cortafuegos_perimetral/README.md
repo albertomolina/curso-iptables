@@ -97,10 +97,10 @@ Permitimos el acceso a http y https desde la red local, pero no desde
 la DMZ.
 
 ```
-iptables -A FORWARD -i virbr1 -o wlan0 -s 192.168.100.0/24 -d 1.1.1.1/32 -p tcp --dport 80 -j ACCEPT
-iptables -A FORWARD -o virbr1 -i wlan0 -d 192.168.100.0/24 -s 1.1.1.1/32 -p tcp --sport 80 -j ACCEPT
-iptables -A FORWARD -i virbr1 -o wlan0 -s 192.168.100.0/24 -d 1.1.1.1/32 -p tcp --dport 443 -j ACCEPT
-iptables -A FORWARD -o virbr1 -i wlan0 -d 192.168.100.0/24 -s 1.1.1.1/32 -p tcp --sport 443 -j ACCEPT
+iptables -A FORWARD -i virbr1 -o wlan0 -s 192.168.100.0/24 -p tcp --dport 80 -j ACCEPT
+iptables -A FORWARD -o virbr1 -i wlan0 -d 192.168.100.0/24 -p tcp --sport 80 -j ACCEPT
+iptables -A FORWARD -i virbr1 -o wlan0 -s 192.168.100.0/24 -p tcp --dport 443 -j ACCEPT
+iptables -A FORWARD -o virbr1 -i wlan0 -d 192.168.100.0/24 -p tcp --sport 443 -j ACCEPT
 ```
 
 ### Servicios de la DMZ
@@ -151,10 +151,10 @@ iptables -A FORWARD -i virbr1 -o wlan0 -s 192.168.100.0/24 -d 1.1.1.1/32 -p udp 
 iptables -A FORWARD -o virbr1 -i wlan0 -d 192.168.100.0/24 -s 1.1.1.1/32 -p udp --sport 53 -j ACCEPT
 iptables -A FORWARD -i virbr2 -o wlan0 -s 192.168.200.0/24 -d 1.1.1.1/32 -p udp --dport 53 -j ACCEPT
 iptables -A FORWARD -o virbr2 -i wlan0 -d 192.168.200.0/24 -s 1.1.1.1/32 -p udp --sport 53 -j ACCEPT
-iptables -A FORWARD -i virbr1 -o wlan0 -s 192.168.100.0/24 -d 1.1.1.1/32 -p tcp --dport 80 -j ACCEPT
-iptables -A FORWARD -o virbr1 -i wlan0 -d 192.168.100.0/24 -s 1.1.1.1/32 -p tcp --sport 80 -j ACCEPT
-iptables -A FORWARD -i virbr1 -o wlan0 -s 192.168.100.0/24 -d 1.1.1.1/32 -p tcp --dport 443 -j ACCEPT
-iptables -A FORWARD -o virbr1 -i wlan0 -d 192.168.100.0/24 -s 1.1.1.1/32 -p tcp --sport 443 -j ACCEPT
+iptables -A FORWARD -i virbr1 -o wlan0 -s 192.168.100.0/24 -p tcp --dport 80 -j ACCEPT
+iptables -A FORWARD -o virbr1 -i wlan0 -d 192.168.100.0/24 -p tcp --sport 80 -j ACCEPT
+iptables -A FORWARD -i virbr1 -o wlan0 -s 192.168.100.0/24 -p tcp --dport 443 -j ACCEPT
+iptables -A FORWARD -o virbr1 -i wlan0 -d 192.168.100.0/24 -p tcp --sport 443 -j ACCEPT
 iptables -A FORWARD -o virbr2 -d 192.168.200.2/32 -p tcp --dport 80 -j ACCEPT
 iptables -A FORWARD -i virbr2 -s 192.168.200.2/32 -p tcp --sport 80 -j ACCEPT
 iptables -A FORWARD -o virbr2 -d 192.168.200.2/32 -p tcp --dport 443 -j ACCEPT
