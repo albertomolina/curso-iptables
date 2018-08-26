@@ -59,14 +59,14 @@ iptables -A FORWARD -i wlan0 -o virbr2 -p tcp --syn --dport 80 \
 iptables -A FORWARD -i wlan0 -o virbr2 -p tcp --syn --dport 443 \
 -m connlimit --connlimit-above 15 -j REJECT --reject-with tcp-reset
 # Peticiones desde Internet o LAN a servicios de la DMZ:
-iptables -A FORWARD -o virbr2 -d 192.168.200.0/32 -m state \
+iptables -A FORWARD -o virbr2 -d 192.168.200.0/24 -m state \
 --state NEW,ESTABLISHED -j A_DMZ
 # Servicios accesibles en la LAN
 iptables -A A_DMZ -p tcp --dport 25 -j ACCEPT
 iptables -A A_DMZ -p tcp --dport 80 -j ACCEPT
 iptables -A A_DMZ -p tcp --dport 443 -j ACCEPT
 # Respuestas desde la DMZ a las peticiones desde Internet o LAN
-iptables -A FORWARD -i virbr2 -s 192.168.200.0/32 -m state \
+iptables -A FORWARD -i virbr2 -s 192.168.200.0/24 -m state \
 --state ESTABLISHED -j DESDE_DMZ
 # Servicios accesibles en la DMZ
 iptables -A DESDE_DMZ -p tcp --sport 25 -j ACCEPT
