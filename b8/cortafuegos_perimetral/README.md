@@ -73,9 +73,8 @@ iptables -A DESDE_DMZ -p tcp --sport 25 -j ACCEPT
 iptables -A DESDE_DMZ -p tcp --sport 80 -j ACCEPT
 iptables -A DESDE_DMZ -p tcp --sport 443 -j ACCEPT
 # Acceso entre las 12:00 y las 12:30 de la DMZ a Internet
-iptables -A FORWARD -i virbr2 -o wlan0 -m multiport \
---sports 1024:65535 -s 192.168.200.0/24 -m time \
---timestart 12:00 --timestop 12:30 -m state --state \
+iptables -A FORWARD -i virbr2 -o wlan0 -s 192.168.200.0/24 \
+-m time --timestart 12:00 --timestop 12:30 -m state --state \
 NEW,ESTABLISHED -j DMZ_A_INTERNET
 # De la DMZ a Internet
 iptables -A DMZ_A_INTERNET -p udp --dport 53 -j ACCEPT
