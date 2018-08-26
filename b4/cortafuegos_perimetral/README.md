@@ -7,7 +7,7 @@ que se verá en la siguiente sección.
 
 ### Diagrama del escenario
 
-![diagrama_escenario]({{github.com/albertomolina/curso-iptables}}/b4/escenario_curso.png)
+![diagrama_escenario](escenario_curso.png)
 
 ## Parámetros del equipo
 
