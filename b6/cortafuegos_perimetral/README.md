@@ -143,5 +143,12 @@ iptables -A FORWARD -i virbr2 -o wlan0 -p tcp --dport 443 -m multiport \
 iptables -A FORWARD -o virbr2 -i wlan0 -p tcp --sport 443 -m multiport \
 --dports 1024:65535 -d 192.168.200.0/24 -s 1.1.1.1 -m time \
 --timestart 12:00 --timestop 12:30 -j ACCEPT
+# Añadimos aquí las reglas de NAT
+iptables -t nat -A POSTROUTING -s 192.168.100.0/24 -o wlan0 -j MASQUERADE
+iptables -t nat -A POSTROUTING -s 192.168.200.0/24 -o wlan0 -m time \
+--timestart 12:00 --timestop 12:30 -j MASQUERADE
+iptables -t nat -A PREROUTING -i wlan0 -p tcp --dport 80 -j DNAT --to 192.168.200.2
+iptables -t nat -A PREROUTING -i wlan0 -p tcp --dport 443 -j DNAT --to 192.168.200.2
+iptables -t nat -A PREROUTING -i wlan0 -p tcp --dport 25 -j DNAT --to 192.168.200.2
 ```
 
