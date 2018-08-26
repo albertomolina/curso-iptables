@@ -43,12 +43,12 @@ iptables -A FORWARD -i wlan0 -o virbr2 -p tcp --syn --dport 443 \
 Restringimos las peticiones desde fuera a puertos no privilegiados
 
 ```
-iptables -A FORWARD -o virbr2 -d 192.168.200.2/32 -p tcp -m multiports --sports 1024:65535 --dport 80 -j ACCEPT
-iptables -A FORWARD -i virbr2 -s 192.168.200.2/32 -p tcp -m multiports --dports 1024:65535 --sport 80 -j ACCEPT
-iptables -A FORWARD -o virbr2 -d 192.168.200.2/32 -p tcp -m multiports --sports 1024:65535 --dport 443 -j ACCEPT
-iptables -A FORWARD -i virbr2 -s 192.168.200.2/32 -p tcp -m multiports --dports 1024:65535 --sport 443 -j ACCEPT
-iptables -A FORWARD -o virbr2 -d 192.168.200.2/32 -p tcp -m multiports --sports 1024:65535 --dport 25 -j ACCEPT
-iptables -A FORWARD -i virbr2 -s 192.168.200.2/32 -p tcp -m multiports --dports 1024:65535 --sport 25 -j ACCEPT
+iptables -A FORWARD -o virbr2 -d 192.168.200.2/32 -p tcp -m multiport --sports 1024:65535 --dport 80 -j ACCEPT
+iptables -A FORWARD -i virbr2 -s 192.168.200.2/32 -p tcp -m multiport --dports 1024:65535 --sport 80 -j ACCEPT
+iptables -A FORWARD -o virbr2 -d 192.168.200.2/32 -p tcp -m multiport --sports 1024:65535 --dport 443 -j ACCEPT
+iptables -A FORWARD -i virbr2 -s 192.168.200.2/32 -p tcp -m multiport --dports 1024:65535 --sport 443 -j ACCEPT
+iptables -A FORWARD -o virbr2 -d 192.168.200.2/32 -p tcp -m multiport --sports 1024:65535 --dport 25 -j ACCEPT
+iptables -A FORWARD -i virbr2 -s 192.168.200.2/32 -p tcp -m multiport --dports 1024:65535 --sport 25 -j ACCEPT
 ```
 
 ### Permitir conexión a Internet desde la DMZ a una hora concreta
@@ -62,24 +62,24 @@ Internet a unos determinados equipos y a hacerlo a una hora
 determinada:
 
 ```
-iptables -A FORWARD -i virbr2 -o wlan0 -p udp --dport 53 -m multiports \
+iptables -A FORWARD -i virbr2 -o wlan0 -p udp --dport 53 -m multiport \
 --sports 1024:65535 -s 192.168.200.0/24 -d 1.1.1.1 -m time \
---time-start 12:00 --time-stop 12:30 -j ACCEPT
-iptables -A FORWARD -o virbr2 -i wlan0 -p udp --sport 53 -m multiports \
+--timestart 12:00 --timestop 12:30 -j ACCEPT
+iptables -A FORWARD -o virbr2 -i wlan0 -p udp --sport 53 -m multiport \
 --dports 1024:65535 -d 192.168.200.0/24 -s 1.1.1.1 -m time \
---time-start 12:00 --time-stop 12:30 -j ACCEPT
-iptables -A FORWARD -i virbr2 -o wlan0 -p tcp --dport 80 -m multiports \
+--timestart 12:00 --timestop 12:30 -j ACCEPT
+iptables -A FORWARD -i virbr2 -o wlan0 -p tcp --dport 80 -m multiport \
 --sports 1024:65535 -s 192.168.200.0/24 -d 1.1.1.1 -m time \
---time-start 12:00 --time-stop 12:30 -j ACCEPT
-iptables -A FORWARD -o virbr2 -i wlan0 -p tcp --sport 80 -m multiports \
+--timestart 12:00 --timestop 12:30 -j ACCEPT
+iptables -A FORWARD -o virbr2 -i wlan0 -p tcp --sport 80 -m multiport \
 --dports 1024:65535 -d 192.168.200.0/24 -s 1.1.1.1 -m time \
---time-start 12:00 --time-stop 12:30 -j ACCEPT
-iptables -A FORWARD -i virbr2 -o wlan0 -p tcp --dport 443 -m multiports \
+--timestart 12:00 --timestop 12:30 -j ACCEPT
+iptables -A FORWARD -i virbr2 -o wlan0 -p tcp --dport 443 -m multiport \
 --sports 1024:65535 -s 192.168.200.0/24 -d 1.1.1.1 -m time \
---time-start 12:00 --time-stop 12:30 -j ACCEPT
-iptables -A FORWARD -o virbr2 -i wlan0 -p tcp --sport 443 -m multiports \
+--timestart 12:00 --timestop 12:30 -j ACCEPT
+iptables -A FORWARD -o virbr2 -i wlan0 -p tcp --sport 443 -m multiport \
 --dports 1024:65535 -d 192.168.200.0/24 -s 1.1.1.1 -m time \
---time-start 12:00 --time-stop 12:30 -j ACCEPT
+--timestart 12:00 --timestop 12:30 -j ACCEPT
 ```
 
 ## Configuración en un solo paso
@@ -125,23 +125,23 @@ iptables -A FORWARD -o virbr2 -d 192.168.200.2/32 -p tcp --dport 25 -j ACCEPT
 iptables -A FORWARD -i virbr2 -s 192.168.200.2/32 -p tcp --sport 25 -j ACCEPT
 iptables -A FORWARD -i virbr2 -o virbr1 -s 192.168.200.2/32 -d 192.168.100.2/32 -p tcp --dport 3306 -j ACCEPT
 iptables -A FORWARD -o virbr2 -i virbr1 -d 192.168.200.2/32 -s 192.168.100.2/32 -p tcp --sport 3306 -j ACCEPT
-iptables -A FORWARD -i virbr2 -o wlan0 -p udp --dport 53 -m multiports \
+iptables -A FORWARD -i virbr2 -o wlan0 -p udp --dport 53 -m multiport \
 --sports 1024:65535 -s 192.168.200.0/24 -d 1.1.1.1 -m time \
---time-start 12:00 --time-stop 12:30 -j ACCEPT
-iptables -A FORWARD -o virbr2 -i wlan0 -p udp --sport 53 -m multiports \
+--timestart 12:00 --timestop 12:30 -j ACCEPT
+iptables -A FORWARD -o virbr2 -i wlan0 -p udp --sport 53 -m multiport \
 --dports 1024:65535 -d 192.168.200.0/24 -s 1.1.1.1 -m time \
---time-start 12:00 --time-stop 12:30 -j ACCEPT
-iptables -A FORWARD -i virbr2 -o wlan0 -p tcp --dport 80 -m multiports \
+--timestart 12:00 --timestop 12:30 -j ACCEPT
+iptables -A FORWARD -i virbr2 -o wlan0 -p tcp --dport 80 -m multiport \
 --sports 1024:65535 -s 192.168.200.0/24 -d 1.1.1.1 -m time \
---time-start 12:00 --time-stop 12:30 -j ACCEPT
-iptables -A FORWARD -o virbr2 -i wlan0 -p tcp --sport 80 -m multiports \
+--timestart 12:00 --timestop 12:30 -j ACCEPT
+iptables -A FORWARD -o virbr2 -i wlan0 -p tcp --sport 80 -m multiport \
 --dports 1024:65535 -d 192.168.200.0/24 -s 1.1.1.1 -m time \
---time-start 12:00 --time-stop 12:30 -j ACCEPT
-iptables -A FORWARD -i virbr2 -o wlan0 -p tcp --dport 443 -m multiports \
+--timestart 12:00 --timestop 12:30 -j ACCEPT
+iptables -A FORWARD -i virbr2 -o wlan0 -p tcp --dport 443 -m multiport \
 --sports 1024:65535 -s 192.168.200.0/24 -d 1.1.1.1 -m time \
---time-start 12:00 --time-stop 12:30 -j ACCEPT
-iptables -A FORWARD -o virbr2 -i wlan0 -p tcp --sport 443 -m multiports \
+--timestart 12:00 --timestop 12:30 -j ACCEPT
+iptables -A FORWARD -o virbr2 -i wlan0 -p tcp --sport 443 -m multiport \
 --dports 1024:65535 -d 192.168.200.0/24 -s 1.1.1.1 -m time \
---time-start 12:00 --time-stop 12:30 -j ACCEPT
+--timestart 12:00 --timestop 12:30 -j ACCEPT
 ```
 
