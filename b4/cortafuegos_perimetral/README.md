@@ -49,11 +49,11 @@ de la red local o de Internet ya que la política lo impide.
 
 ### Protocolo ICMP
 
-Peticiones y respuesta de ping desde el equipo del cortafuegos al exterior
+Peticiones y respuesta desde el equipo del cortafuegos al exterior
 
 ```
-iptables -A OUTPUT -o wlan0 -p icmp -m icmp --icmp-type echo-request -j ACCEPT
-iptables -A INPUT -i wlan0 -p icmp -m icmp --icmp-type echo-reply -j ACCEPT
+iptables -A OUTPUT -o wlan0 -p icmp -j ACCEPT
+iptables -A INPUT -i wlan0 -p icmp -j ACCEPT
 ```
 
 Abrimos todo el ICMP para las dos redes internas, ya que es adecuado
@@ -66,13 +66,13 @@ iptables -A INPUT -i virbr2 -p icmp -s 192.168.200.0/24 -j ACCEPT
 iptables -A OUTPUT -o virbr2 -p icmp -d 192.168.200.0/24 -j ACCEPT
 ```
 
-Abrimos el ping entre las dos redes, pero no el resto de ICMP:
+Abrimos el ICMP entre las dos redes:
 
 ```
-iptables -A FORWARD -i virbr1 -o virbr2 -p icmp -m icmp --icmp-type echo-request -j ACCEPT
-iptables -A FORWARD -o virbr1 -i virbr2 -p icmp -m icmp --icmp-type echo-reply -j ACCEPT
-iptables -A FORWARD -i virbr2 -o virbr1 -p icmp -m icmp --icmp-type echo-request -j ACCEPT
-iptables -A FORWARD -o virbr2 -i virbr1 -p icmp -m icmp --icmp-type echo-reply -j ACCEPT
+iptables -A FORWARD -i virbr1 -o virbr2 -p icmp -j ACCEPT
+iptables -A FORWARD -o virbr1 -i virbr2 -p icmp -j ACCEPT
+iptables -A FORWARD -i virbr2 -o virbr1 -p icmp -j ACCEPT
+iptables -A FORWARD -o virbr2 -i virbr1 -p icmp -j ACCEPT
 ```
 
 Comprobamos su funcionamiento haciendo ping entre los diferentes equipos.
@@ -137,16 +137,16 @@ iptables -t nat -Z
 iptables -P INPUT DROP
 iptables -P OUTPUT DROP
 iptables -P FORWARD DROP
-iptables -A OUTPUT -o wlan0 -p icmp -m icmp --icmp-type echo-request -j ACCEPT
-iptables -A INPUT -i wlan0 -p icmp -m icmp --icmp-type echo-reply -j ACCEPT
+iptables -A OUTPUT -o wlan0 -p icmp -j ACCEPT
+iptables -A INPUT -i wlan0 -p icmp -j ACCEPT
 iptables -A INPUT -i virbr1 -p icmp -s 192.168.100.0/24 -j ACCEPT
 iptables -A OUTPUT -o virbr1 -p icmp -d 192.168.100.0/24 -j ACCEPT
 iptables -A INPUT -i virbr2 -p icmp -s 192.168.200.0/24 -j ACCEPT
 iptables -A OUTPUT -o virbr2 -p icmp -d 192.168.200.0/24 -j ACCEPT
-iptables -A FORWARD -i virbr1 -o virbr2 -p icmp -m icmp --icmp-type echo-request -j ACCEPT
-iptables -A FORWARD -o virbr1 -i virbr2 -p icmp -m icmp --icmp-type echo-reply -j ACCEPT
-iptables -A FORWARD -i virbr2 -o virbr1 -p icmp -m icmp --icmp-type echo-request -j ACCEPT
-iptables -A FORWARD -o virbr2 -i virbr1 -p icmp -m icmp --icmp-type echo-reply -j ACCEPT
+iptables -A FORWARD -i virbr1 -o virbr2 -p icmp -j ACCEPT
+iptables -A FORWARD -o virbr1 -i virbr2 -p icmp -j ACCEPT
+iptables -A FORWARD -i virbr2 -o virbr1 -p icmp -j ACCEPT
+iptables -A FORWARD -o virbr2 -i virbr1 -p icmp -j ACCEPT
 iptables -A FORWARD -i virbr1 -o wlan0 -s 192.168.100.0/24 -d 1.1.1.1/32 -p udp --dport 53 -j ACCEPT
 iptables -A FORWARD -o virbr1 -i wlan0 -d 192.168.100.0/24 -s 1.1.1.1/32 -p udp --sport 53 -j ACCEPT
 iptables -A FORWARD -i virbr2 -o wlan0 -s 192.168.200.0/24 -d 1.1.1.1/32 -p udp --dport 53 -j ACCEPT
