@@ -5,6 +5,10 @@ que protege la red interna y da acceso a los servicios de la DMZ,
 aunque hay algunas cosas que requieren la definición de reglas de NAT
 que se verá en la siguiente sección.
 
+### Diagrama del escenario
+
+![diagrama_escenario]({{github.com/albertomolina/curso-iptables}}/b4/escenario_curso.png)
+
 ## Parámetros del equipo
 
 ```
