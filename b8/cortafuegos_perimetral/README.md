@@ -40,7 +40,7 @@ iptables -N DMZ_A_LAN
 iptables -A FORWARD -i virbr1 -o wlan0 -s 192.168.100.0/24 -m state \
 --state NEW,ESTABLISHED -j LAN_A_INTERNET
 # Enviamos todas las respuestas de Internet de las peticiones hechas
-desde la LAN a la cadena INTERNET_A_LAN
+# desde la LAN a la cadena INTERNET_A_LAN
 iptables -A FORWARD -o virbr1 -i wlan0 -d 192.168.100.0/24 -m state \
 --state ESTABLISHED -j INTERNET_A_LAN
 # Reglas de LAN_A_INTERNET
@@ -52,7 +52,7 @@ iptables -A LAN_A_INTERNET -s 1.1.1.1/32 -p udp --sport 53 -j ACCEPT
 iptables -A LAN_A_INTERNET -p tcp --sport 80 -j ACCEPT
 iptables -A LAN_A_INTERNET -p tcp --sport 443 -j ACCEPT
 # Limite de peticiones simultáneas desde Internet
-iptables -A FORWARD -i wlan0 -o virbr2 -p tcp --syn --dport 25 \ 
+iptables -A FORWARD -i wlan0 -o virbr2 -p tcp --syn --dport 25 \
 -m connlimit --connlimit-above 2 -j REJECT --reject-with tcp-reset
 iptables -A FORWARD -i wlan0 -o virbr2 -p tcp --syn --dport 80 \
 -m connlimit --connlimit-above 15 -j REJECT --reject-with tcp-reset
@@ -82,9 +82,8 @@ iptables -A DMZ_A_INTERNET -p udp --dport 53 -j ACCEPT
 iptables -A DMZ_A_INTERNET -p tcp --dport 80 -j ACCEPT
 iptables -A DMZ_A_INTERNET -p tcp --dport 443 -j ACCEPT
 # Respuestas entre las 12:00 y las 12:30 de Internet a DMZ
-iptables -A FORWARD -o virbr2 -i wlan0 -m multiport \
---dports 1024:65535 -d 192.168.200.0/24 -m time \
---timestart 12:00 --timestop 12:30 -m state \
+iptables -A FORWARD -o virbr2 -i wlan0 -d 192.168.200.0/24 \
+-m time --timestart 12:00 --timestop 12:30 -m state \
 --state ESTABLISHED -j INTERNET_A_DMZ
 # De Internet a DMZ
 iptables -A INTERNET_A_DMZ -p udp --dport 53 -j ACCEPT
