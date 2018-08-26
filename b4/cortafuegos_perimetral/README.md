@@ -106,8 +106,62 @@ iptables -A FORWARD -o virbr0 -i wlan0 -d 192.168.100.0/24 -s 1.1.1.1/32 -p tcp 
 ### Servicios de la DMZ
 
 Vamos a suponer que la DMZ está alojando los servicios http, https y
-smtp, que deben ser accesibles desde la red local y 
+smtp, que deben ser accesibles desde la red local y desde Internet
+
+```
+iptables -A FORWARD -o virbr1 -d 192.168.200.2/32 -p tcp --dport 80 -j ACCEPT
+iptables -A FORWARD -i virbr1 -s 192.168.200.2/32 -p tcp --sport 80 -j ACCEPT
+iptables -A FORWARD -o virbr1 -d 192.168.200.2/32 -p tcp --dport 443 -j ACCEPT
+iptables -A FORWARD -i virbr1 -s 192.168.200.2/32 -p tcp --sport 443 -j ACCEPT
+iptables -A FORWARD -o virbr1 -d 192.168.200.2/32 -p tcp --dport 25 -j ACCEPT
+iptables -A FORWARD -i virbr1 -s 192.168.200.2/32 -p tcp --sport 25 -j ACCEPT
+```
+
+Por último, vamos a suponer que ubicamos una base de datos en la red
+interna, para no tenerla tan expuesta en la DMZ, pero esa base de
+datos debe poder consultarla el servidor web:
+
+```
+iptables -A FORWARD -i virbr1 -o virbr0 -s 192.168.200.2/32 -d 192.168.100.2/32 -p tcp --dport 3306 -j ACCEPT
+iptables -A FORWARD -o virbr1 -i virbr0 -d 192.168.200.2/32 -s 192.168.100.2/32 -p tcp --sport 3306 -j ACCEPT
+```
 
 ## Configuración en un solo paso
+
+
+```
+iptables -F
+iptables -t nat -F
+iptables -Z
+iptables -t nat -Z
+iptables -P INPUT DROP
+iptables -P OUTPUT DROP
+iptables -P FORWARD DROP
+iptables -A OUTPUT -o wlan0 -p icmp -m icmp --icmp-type echo-request -j ACCEPT
+iptables -A INPUT -i wlan0 -p icmp -m icmp --icmp-type echo-reply -j ACCEPT
+iptables -A INPUT -i virbr0 -p icmp -s 192.168.100.0/24 -j ACCEPT
+iptables -A OUTPUT -o virbr0 -p icmp -d 192.168.100.0/24 -j ACCEPT
+iptables -A INPUT -i virbr1 -p icmp -s 192.168.200.0/24 -j ACCEPT
+iptables -A OUTPUT -o virbr1 -p icmp -d 192.168.200.0/24 -j ACCEPT
+iptables -A FORWARD -i virbr0 -o virbr1 -p icmp -m icmp --icmp-type echo-request -j ACCEPT
+iptables -A FORWARD -o virbr0 -i virbr1 -p icmp -m icmp --icmp-type echo-reply -j ACCEPT
+iptables -A FORWARD -i virbr1 -o virbr0 -p icmp -m icmp --icmp-type echo-request -j ACCEPT
+iptables -A FORWARD -o virbr1 -i virbr0 -p icmp -m icmp --icmp-type echo-reply -j ACCEPT
+iptables -A FORWARD -i virbr0 -o wlan0 -s 192.168.100.0/24 -d 1.1.1.1/32 -p udp --dport 53 -j ACCEPT
+iptables -A FORWARD -o virbr0 -i wlan0 -d 192.168.100.0/24 -s 1.1.1.1/32 -p udp --sport 53 -j ACCEPT
+iptables -A FORWARD -i virbr1 -o wlan0 -s 192.168.200.0/24 -d 1.1.1.1/32 -p udp --dport 53 -j ACCEPT
+iptables -A FORWARD -o virbr1 -i wlan0 -d 192.168.200.0/24 -s 1.1.1.1/32 -p udp --sport 53 -j ACCEPT
+iptables -A FORWARD -i virbr0 -o wlan0 -s 192.168.100.0/24 -d 1.1.1.1/32 -p tcp --dport 80 -j ACCEPT
+iptables -A FORWARD -o virbr0 -i wlan0 -d 192.168.100.0/24 -s 1.1.1.1/32 -p tcp --sport 80 -j ACCEPT
+iptables -A FORWARD -i virbr0 -o wlan0 -s 192.168.100.0/24 -d 1.1.1.1/32 -p tcp --dport 443 -j ACCEPT
+iptables -A FORWARD -o virbr0 -i wlan0 -d 192.168.100.0/24 -s 1.1.1.1/32 -p tcp --sport 443 -j ACCEPT
+iptables -A FORWARD -o virbr1 -d 192.168.200.2/32 -p tcp --dport 80 -j ACCEPT
+iptables -A FORWARD -i virbr1 -s 192.168.200.2/32 -p tcp --sport 80 -j ACCEPT
+iptables -A FORWARD -o virbr1 -d 192.168.200.2/32 -p tcp --dport 443 -j ACCEPT
+iptables -A FORWARD -i virbr1 -s 192.168.200.2/32 -p tcp --sport 443 -j ACCEPT
+iptables -A FORWARD -o virbr1 -d 192.168.200.2/32 -p tcp --dport 25 -j ACCEPT
+iptables -A FORWARD -i virbr1 -s 192.168.200.2/32 -p tcp --sport 25 -j ACCEPT
+iptables -A FORWARD -i virbr1 -o virbr0 -s 192.168.200.2/32 -d 192.168.100.2/32 -p tcp --dport 3306 -j ACCEPT
+iptables -A FORWARD -o virbr1 -i virbr0 -d 192.168.200.2/32 -s 192.168.100.2/32 -p tcp --sport 3306 -j ACCEPT
 ```
 
