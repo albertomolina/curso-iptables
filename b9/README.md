@@ -134,6 +134,7 @@ permisos de ejecución, por ejemplo:
 ```
 /usr/local/bin/iptables.sh
 chmod +x /usr/local/bin/iptables.sh
+```
 
 ### Ejecutar el script automáticamente al arrancar la máquina
 
