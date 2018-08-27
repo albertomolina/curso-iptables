@@ -27,6 +27,20 @@ Implementaremos un cortafuegos con política por defecto DROP e iremos
 de forma paulatina agregando reglas que permitan un uso elemental de
 los equipos de la red local y la DMZ
 
+### Activar el bit de forward
+Simplemente ejecutamos:
+
+```
+echo 1 > /proc/sys/net/ipv4/ip_forward
+```
+
+O de forma permanente modificando apropiadamente el fichero
+/etc/sysctl.conf, descomentando la línea:
+
+```
+net.ipv4.ip_forward=1
+```
+
 ### Limpieza de las reglas previas
 
 ```
