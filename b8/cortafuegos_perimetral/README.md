@@ -42,11 +42,11 @@ iptables -A FORWARD -i virbr1 -o br0 -s 192.168.100.0/24 -m state \
 iptables -A FORWARD -o virbr1 -i br0 -d 192.168.100.0/24 -m state \
 --state ESTABLISHED -j INTERNET_A_LAN
 # Reglas de LAN_A_INTERNET
-iptables -A LAN_A_INTERNET -d 1.1.1.1/32 -p udp --dport 53 -j ACCEPT
+iptables -A LAN_A_INTERNET  -p udp --dport 53 -j ACCEPT
 iptables -A LAN_A_INTERNET -p tcp --dport 80 -j ACCEPT
 iptables -A LAN_A_INTERNET -p tcp --dport 443 -j ACCEPT
 # Reglas de INTERNET_A_LAN
-iptables -A LAN_A_INTERNET -s 1.1.1.1/32 -p udp --sport 53 -j ACCEPT
+iptables -A LAN_A_INTERNET  -p udp --sport 53 -j ACCEPT
 iptables -A LAN_A_INTERNET -p tcp --sport 80 -j ACCEPT
 iptables -A LAN_A_INTERNET -p tcp --sport 443 -j ACCEPT
 # Limite de peticiones simultáneas desde Internet

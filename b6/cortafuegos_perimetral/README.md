@@ -63,22 +63,22 @@ determinada:
 
 ```
 iptables -A FORWARD -i virbr2 -o br0 -p udp --dport 53 -m multiport \
---sports 1024:65535 -s 192.168.200.0/24 -d 1.1.1.1 -m time \
+--sports 1024:65535 -s 192.168.200.0/24  -m time \
 --timestart 12:00 --timestop 12:30 -j ACCEPT
 iptables -A FORWARD -o virbr2 -i br0 -p udp --sport 53 -m multiport \
---dports 1024:65535 -d 192.168.200.0/24 -s 1.1.1.1 -m time \
+--dports 1024:65535 -d 192.168.200.0/24  -m time \
 --timestart 12:00 --timestop 12:30 -j ACCEPT
 iptables -A FORWARD -i virbr2 -o br0 -p tcp --dport 80 -m multiport \
---sports 1024:65535 -s 192.168.200.0/24 -d 1.1.1.1 -m time \
+--sports 1024:65535 -s 192.168.200.0/24  -m time \
 --timestart 12:00 --timestop 12:30 -j ACCEPT
 iptables -A FORWARD -o virbr2 -i br0 -p tcp --sport 80 -m multiport \
---dports 1024:65535 -d 192.168.200.0/24 -s 1.1.1.1 -m time \
+--dports 1024:65535 -d 192.168.200.0/24  -m time \
 --timestart 12:00 --timestop 12:30 -j ACCEPT
 iptables -A FORWARD -i virbr2 -o br0 -p tcp --dport 443 -m multiport \
---sports 1024:65535 -s 192.168.200.0/24 -d 1.1.1.1 -m time \
+--sports 1024:65535 -s 192.168.200.0/24  -m time \
 --timestart 12:00 --timestop 12:30 -j ACCEPT
 iptables -A FORWARD -o virbr2 -i br0 -p tcp --sport 443 -m multiport \
---dports 1024:65535 -d 192.168.200.0/24 -s 1.1.1.1 -m time \
+--dports 1024:65535 -d 192.168.200.0/24  -m time \
 --timestart 12:00 --timestop 12:30 -j ACCEPT
 ```
 
@@ -103,10 +103,10 @@ iptables -A FORWARD -i virbr1 -o virbr2 -p icmp -m icmp --icmp-type echo-request
 iptables -A FORWARD -o virbr1 -i virbr2 -p icmp -m icmp --icmp-type echo-reply -j ACCEPT
 iptables -A FORWARD -i virbr2 -o virbr1 -p icmp -m icmp --icmp-type echo-request -j ACCEPT
 iptables -A FORWARD -o virbr2 -i virbr1 -p icmp -m icmp --icmp-type echo-reply -j ACCEPT
-iptables -A FORWARD -i virbr1 -o br0 -s 192.168.100.0/24 -d 1.1.1.1/32 -p udp --dport 53 -j ACCEPT
-iptables -A FORWARD -o virbr1 -i br0 -d 192.168.100.0/24 -s 1.1.1.1/32 -p udp --sport 53 -j ACCEPT
-iptables -A FORWARD -i virbr2 -o br0 -s 192.168.200.0/24 -d 1.1.1.1/32 -p udp --dport 53 -j ACCEPT
-iptables -A FORWARD -o virbr2 -i br0 -d 192.168.200.0/24 -s 1.1.1.1/32 -p udp --sport 53 -j ACCEPT
+iptables -A FORWARD -i virbr1 -o br0 -s 192.168.100.0/24  -p udp --dport 53 -j ACCEPT
+iptables -A FORWARD -o virbr1 -i br0 -d 192.168.100.0/24 -p udp --sport 53 -j ACCEPT
+iptables -A FORWARD -i virbr2 -o br0 -s 192.168.200.0/24  -p udp --dport 53 -j ACCEPT
+iptables -A FORWARD -o virbr2 -i br0 -d 192.168.200.0/24  -p udp --sport 53 -j ACCEPT
 iptables -A FORWARD -i virbr1 -o br0 -s 192.168.100.0/24 -p tcp --dport 80 -j ACCEPT
 iptables -A FORWARD -o virbr1 -i br0 -d 192.168.100.0/24 -p tcp --sport 80 -j ACCEPT
 iptables -A FORWARD -i virbr1 -o br0 -s 192.168.100.0/24 -p tcp --dport 443 -j ACCEPT
@@ -126,22 +126,22 @@ iptables -A FORWARD -i virbr2 -s 192.168.200.2/32 -p tcp --sport 25 -j ACCEPT
 iptables -A FORWARD -i virbr2 -o virbr1 -s 192.168.200.2/32 -d 192.168.100.2/32 -p tcp --dport 3306 -j ACCEPT
 iptables -A FORWARD -o virbr2 -i virbr1 -d 192.168.200.2/32 -s 192.168.100.2/32 -p tcp --sport 3306 -j ACCEPT
 iptables -A FORWARD -i virbr2 -o br0 -p udp --dport 53 -m multiport \
---sports 1024:65535 -s 192.168.200.0/24 -d 1.1.1.1 -m time \
+--sports 1024:65535 -s 192.168.200.0/24  -m time \
 --timestart 12:00 --timestop 12:30 -j ACCEPT
 iptables -A FORWARD -o virbr2 -i br0 -p udp --sport 53 -m multiport \
---dports 1024:65535 -d 192.168.200.0/24 -s 1.1.1.1 -m time \
+--dports 1024:65535 -d 192.168.200.0/24  -m time \
 --timestart 12:00 --timestop 12:30 -j ACCEPT
 iptables -A FORWARD -i virbr2 -o br0 -p tcp --dport 80 -m multiport \
---sports 1024:65535 -s 192.168.200.0/24 -d 1.1.1.1 -m time \
+--sports 1024:65535 -s 192.168.200.0/24  -m time \
 --timestart 12:00 --timestop 12:30 -j ACCEPT
 iptables -A FORWARD -o virbr2 -i br0 -p tcp --sport 80 -m multiport \
---dports 1024:65535 -d 192.168.200.0/24 -s 1.1.1.1 -m time \
+--dports 1024:65535 -d 192.168.200.0/24  -m time \
 --timestart 12:00 --timestop 12:30 -j ACCEPT
 iptables -A FORWARD -i virbr2 -o br0 -p tcp --dport 443 -m multiport \
---sports 1024:65535 -s 192.168.200.0/24 -d 1.1.1.1 -m time \
+--sports 1024:65535 -s 192.168.200.0/24  -m time \
 --timestart 12:00 --timestop 12:30 -j ACCEPT
 iptables -A FORWARD -o virbr2 -i br0 -p tcp --sport 443 -m multiport \
---dports 1024:65535 -d 192.168.200.0/24 -s 1.1.1.1 -m time \
+--dports 1024:65535 -d 192.168.200.0/24  -m time \
 --timestart 12:00 --timestop 12:30 -j ACCEPT
 # Añadimos aquí las reglas de NAT
 iptables -t nat -A POSTROUTING -s 192.168.100.0/24 -o br0 -j MASQUERADE
