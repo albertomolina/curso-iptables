@@ -97,10 +97,10 @@ Las permitimos desde los equipos de ambas redes, pero solo a los DNS
 de Cloudfare:
 
 ```
-iptables -A FORWARD -i virbr1 -o br0 -s 192.168.100.0/24 -d 1.1.1.1/32 -p udp --dport 53 -j ACCEPT
-iptables -A FORWARD -o virbr1 -i br0 -d 192.168.100.0/24 -s 1.1.1.1/32 -p udp --sport 53 -j ACCEPT
-iptables -A FORWARD -i virbr2 -o br0 -s 192.168.200.0/24 -d 1.1.1.1/32 -p udp --dport 53 -j ACCEPT
-iptables -A FORWARD -o virbr2 -i br0 -d 192.168.200.0/24 -s 1.1.1.1/32 -p udp --sport 53 -j ACCEPT
+iptables -A FORWARD -i virbr1 -o br0 -s 192.168.100.0/24 -p udp --dport 53 -j ACCEPT
+iptables -A FORWARD -o virbr1 -i br0 -d 192.168.100.0/24 -p udp --sport 53 -j ACCEPT
+iptables -A FORWARD -i virbr2 -o br0 -s 192.168.200.0/24 -p udp --dport 53 -j ACCEPT
+iptables -A FORWARD -o virbr2 -i br0 -d 192.168.200.0/24 -p udp --sport 53 -j ACCEPT
 ```
 
 Comprobamos su funcionamiento con una consulta DNS:
@@ -161,10 +161,10 @@ iptables -A FORWARD -i virbr1 -o virbr2 -p icmp -j ACCEPT
 iptables -A FORWARD -o virbr1 -i virbr2 -p icmp -j ACCEPT
 iptables -A FORWARD -i virbr2 -o virbr1 -p icmp -j ACCEPT
 iptables -A FORWARD -o virbr2 -i virbr1 -p icmp -j ACCEPT
-iptables -A FORWARD -i virbr1 -o br0 -s 192.168.100.0/24 -d 1.1.1.1/32 -p udp --dport 53 -j ACCEPT
-iptables -A FORWARD -o virbr1 -i br0 -d 192.168.100.0/24 -s 1.1.1.1/32 -p udp --sport 53 -j ACCEPT
-iptables -A FORWARD -i virbr2 -o br0 -s 192.168.200.0/24 -d 1.1.1.1/32 -p udp --dport 53 -j ACCEPT
-iptables -A FORWARD -o virbr2 -i br0 -d 192.168.200.0/24 -s 1.1.1.1/32 -p udp --sport 53 -j ACCEPT
+iptables -A FORWARD -i virbr1 -o br0 -s 192.168.100.0/24 -p udp --dport 53 -j ACCEPT
+iptables -A FORWARD -o virbr1 -i br0 -d 192.168.100.0/24 -p udp --sport 53 -j ACCEPT
+iptables -A FORWARD -i virbr2 -o br0 -s 192.168.200.0/24 -p udp --dport 53 -j ACCEPT
+iptables -A FORWARD -o virbr2 -i br0 -d 192.168.200.0/24 -p udp --sport 53 -j ACCEPT
 iptables -A FORWARD -i virbr1 -o br0 -s 192.168.100.0/24 -p tcp --dport 80 -j ACCEPT
 iptables -A FORWARD -o virbr1 -i br0 -d 192.168.100.0/24 -p tcp --sport 80 -j ACCEPT
 iptables -A FORWARD -i virbr1 -o br0 -s 192.168.100.0/24 -p tcp --dport 443 -j ACCEPT
