@@ -29,7 +29,7 @@ posteriormente sysctl -p /etc/sysctl.conf
 En este caso la regla de SNAT es:
 
 ```
-iptables -t nat -A POSTROUTING -s 192.168.100.0/24 -o eth0 -j MASQUERADE
+iptables -t nat -A POSTROUTING -s 192.168.100.0/24 -o br0 -j MASQUERADE
 ```
 
 ## DNAT
@@ -37,9 +37,9 @@ iptables -t nat -A POSTROUTING -s 192.168.100.0/24 -o eth0 -j MASQUERADE
 Creamos una regla de DNAT para cada servicio de la DMZ:
 
 ```
-iptables -t nat -A PREROUTING -i eth0 -p tcp --dport 80 -j DNAT --to 192.168.200.2
-iptables -t nat -A PREROUTING -i eth0 -p tcp --dport 443 -j DNAT --to 192.168.200.2
-iptables -t nat -A PREROUTING -i eth0 -p tcp --dport 25 -j DNAT --to 192.168.200.2
+iptables -t nat -A PREROUTING -i br0 -p tcp --dport 80 -j DNAT --to 192.168.200.2
+iptables -t nat -A PREROUTING -i br0 -p tcp --dport 443 -j DNAT --to 192.168.200.2
+iptables -t nat -A PREROUTING -i br0 -p tcp --dport 25 -j DNAT --to 192.168.200.2
 ```
 
 

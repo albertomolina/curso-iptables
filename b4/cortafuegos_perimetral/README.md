@@ -66,8 +66,8 @@ de la red local o de Internet ya que la política lo impide.
 Peticiones y respuesta desde el equipo del cortafuegos al exterior
 
 ```
-iptables -A OUTPUT -o eth0 -p icmp -j ACCEPT
-iptables -A INPUT -i eth0 -p icmp -j ACCEPT
+iptables -A OUTPUT -o br0 -p icmp -j ACCEPT
+iptables -A INPUT -i br0 -p icmp -j ACCEPT
 ```
 
 Abrimos todo el ICMP para las dos redes internas, ya que es adecuado
@@ -97,10 +97,10 @@ Las permitimos desde los equipos de ambas redes, pero solo a los DNS
 de Cloudfare:
 
 ```
-iptables -A FORWARD -i virbr1 -o eth0 -s 192.168.100.0/24 -d 1.1.1.1/32 -p udp --dport 53 -j ACCEPT
-iptables -A FORWARD -o virbr1 -i eth0 -d 192.168.100.0/24 -s 1.1.1.1/32 -p udp --sport 53 -j ACCEPT
-iptables -A FORWARD -i virbr2 -o eth0 -s 192.168.200.0/24 -d 1.1.1.1/32 -p udp --dport 53 -j ACCEPT
-iptables -A FORWARD -o virbr2 -i eth0 -d 192.168.200.0/24 -s 1.1.1.1/32 -p udp --sport 53 -j ACCEPT
+iptables -A FORWARD -i virbr1 -o br0 -s 192.168.100.0/24 -d 1.1.1.1/32 -p udp --dport 53 -j ACCEPT
+iptables -A FORWARD -o virbr1 -i br0 -d 192.168.100.0/24 -s 1.1.1.1/32 -p udp --sport 53 -j ACCEPT
+iptables -A FORWARD -i virbr2 -o br0 -s 192.168.200.0/24 -d 1.1.1.1/32 -p udp --dport 53 -j ACCEPT
+iptables -A FORWARD -o virbr2 -i br0 -d 192.168.200.0/24 -s 1.1.1.1/32 -p udp --sport 53 -j ACCEPT
 ```
 
 Comprobamos su funcionamiento con una consulta DNS:
@@ -111,10 +111,10 @@ Permitimos el acceso a http y https desde la red local, pero no desde
 la DMZ.
 
 ```
-iptables -A FORWARD -i virbr1 -o eth0 -s 192.168.100.0/24 -p tcp --dport 80 -j ACCEPT
-iptables -A FORWARD -o virbr1 -i eth0 -d 192.168.100.0/24 -p tcp --sport 80 -j ACCEPT
-iptables -A FORWARD -i virbr1 -o eth0 -s 192.168.100.0/24 -p tcp --dport 443 -j ACCEPT
-iptables -A FORWARD -o virbr1 -i eth0 -d 192.168.100.0/24 -p tcp --sport 443 -j ACCEPT
+iptables -A FORWARD -i virbr1 -o br0 -s 192.168.100.0/24 -p tcp --dport 80 -j ACCEPT
+iptables -A FORWARD -o virbr1 -i br0 -d 192.168.100.0/24 -p tcp --sport 80 -j ACCEPT
+iptables -A FORWARD -i virbr1 -o br0 -s 192.168.100.0/24 -p tcp --dport 443 -j ACCEPT
+iptables -A FORWARD -o virbr1 -i br0 -d 192.168.100.0/24 -p tcp --sport 443 -j ACCEPT
 ```
 
 ### Servicios de la DMZ
@@ -151,8 +151,8 @@ iptables -t nat -Z
 iptables -P INPUT DROP
 iptables -P OUTPUT DROP
 iptables -P FORWARD DROP
-iptables -A OUTPUT -o eth0 -p icmp -j ACCEPT
-iptables -A INPUT -i eth0 -p icmp -j ACCEPT
+iptables -A OUTPUT -o br0 -p icmp -j ACCEPT
+iptables -A INPUT -i br0 -p icmp -j ACCEPT
 iptables -A INPUT -i virbr1 -p icmp -s 192.168.100.0/24 -j ACCEPT
 iptables -A OUTPUT -o virbr1 -p icmp -d 192.168.100.0/24 -j ACCEPT
 iptables -A INPUT -i virbr2 -p icmp -s 192.168.200.0/24 -j ACCEPT
@@ -161,14 +161,14 @@ iptables -A FORWARD -i virbr1 -o virbr2 -p icmp -j ACCEPT
 iptables -A FORWARD -o virbr1 -i virbr2 -p icmp -j ACCEPT
 iptables -A FORWARD -i virbr2 -o virbr1 -p icmp -j ACCEPT
 iptables -A FORWARD -o virbr2 -i virbr1 -p icmp -j ACCEPT
-iptables -A FORWARD -i virbr1 -o eth0 -s 192.168.100.0/24 -d 1.1.1.1/32 -p udp --dport 53 -j ACCEPT
-iptables -A FORWARD -o virbr1 -i eth0 -d 192.168.100.0/24 -s 1.1.1.1/32 -p udp --sport 53 -j ACCEPT
-iptables -A FORWARD -i virbr2 -o eth0 -s 192.168.200.0/24 -d 1.1.1.1/32 -p udp --dport 53 -j ACCEPT
-iptables -A FORWARD -o virbr2 -i eth0 -d 192.168.200.0/24 -s 1.1.1.1/32 -p udp --sport 53 -j ACCEPT
-iptables -A FORWARD -i virbr1 -o eth0 -s 192.168.100.0/24 -p tcp --dport 80 -j ACCEPT
-iptables -A FORWARD -o virbr1 -i eth0 -d 192.168.100.0/24 -p tcp --sport 80 -j ACCEPT
-iptables -A FORWARD -i virbr1 -o eth0 -s 192.168.100.0/24 -p tcp --dport 443 -j ACCEPT
-iptables -A FORWARD -o virbr1 -i eth0 -d 192.168.100.0/24 -p tcp --sport 443 -j ACCEPT
+iptables -A FORWARD -i virbr1 -o br0 -s 192.168.100.0/24 -d 1.1.1.1/32 -p udp --dport 53 -j ACCEPT
+iptables -A FORWARD -o virbr1 -i br0 -d 192.168.100.0/24 -s 1.1.1.1/32 -p udp --sport 53 -j ACCEPT
+iptables -A FORWARD -i virbr2 -o br0 -s 192.168.200.0/24 -d 1.1.1.1/32 -p udp --dport 53 -j ACCEPT
+iptables -A FORWARD -o virbr2 -i br0 -d 192.168.200.0/24 -s 1.1.1.1/32 -p udp --sport 53 -j ACCEPT
+iptables -A FORWARD -i virbr1 -o br0 -s 192.168.100.0/24 -p tcp --dport 80 -j ACCEPT
+iptables -A FORWARD -o virbr1 -i br0 -d 192.168.100.0/24 -p tcp --sport 80 -j ACCEPT
+iptables -A FORWARD -i virbr1 -o br0 -s 192.168.100.0/24 -p tcp --dport 443 -j ACCEPT
+iptables -A FORWARD -o virbr1 -i br0 -d 192.168.100.0/24 -p tcp --sport 443 -j ACCEPT
 iptables -A FORWARD -o virbr2 -d 192.168.200.2/32 -p tcp --dport 80 -j ACCEPT
 iptables -A FORWARD -i virbr2 -s 192.168.200.2/32 -p tcp --sport 80 -j ACCEPT
 iptables -A FORWARD -o virbr2 -d 192.168.200.2/32 -p tcp --dport 443 -j ACCEPT
