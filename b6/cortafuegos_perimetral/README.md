@@ -30,7 +30,7 @@ iptables -A FORWARD -o virbr2 -i virbr1 -p icmp -m icmp --icmp-type echo-reply -
 Limitamos a dos conexiones simultáneas al sermidor de correos, pero a
 15 al servidor web:
 ```
-iptables -A FORWARD -i br0 -o virbr2 -p tcp --syn --dport 25 \ 
+iptables -A FORWARD -i br0 -o virbr2 -p tcp --syn --dport 25 \
 -m connlimit --connlimit-above 2 -j REJECT --reject-with tcp-reset
 iptables -A FORWARD -i br0 -o virbr2 -p tcp --syn --dport 80 \
 -m connlimit --connlimit-above 15 -j REJECT --reject-with tcp-reset
@@ -111,7 +111,7 @@ iptables -A FORWARD -i virbr1 -o br0 -s 192.168.100.0/24 -p tcp --dport 80 -j AC
 iptables -A FORWARD -o virbr1 -i br0 -d 192.168.100.0/24 -p tcp --sport 80 -j ACCEPT
 iptables -A FORWARD -i virbr1 -o br0 -s 192.168.100.0/24 -p tcp --dport 443 -j ACCEPT
 iptables -A FORWARD -o virbr1 -i br0 -d 192.168.100.0/24 -p tcp --sport 443 -j ACCEPT
-iptables -A FORWARD -i br0 -o virbr2 -p tcp --syn --dport 25 \ 
+iptables -A FORWARD -i br0 -o virbr2 -p tcp --syn --dport 25 \
 -m connlimit --connlimit-above 2 -j REJECT --reject-with tcp-reset
 iptables -A FORWARD -i br0 -o virbr2 -p tcp --syn --dport 80 \
 -m connlimit --connlimit-above 15 -j REJECT --reject-with tcp-reset
