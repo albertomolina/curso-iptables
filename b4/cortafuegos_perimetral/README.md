@@ -16,7 +16,7 @@ Interfaz de red local: virbr1
 Dirección IP red local: 192.168.100.1/24
 Interfaz de red DMZ: virbr2
 Dirección IP DMZ: 192.168.200.1/24
-Interfaz de red externa: eth0
+Interfaz de red externa: br0
 Dirección IP externa: Dinámica
 Puerta de enlace: 192.168.1.1
 ```
